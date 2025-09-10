@@ -1,0 +1,588 @@
+----------------------- ALL the IPs here make sure to Bruteforce their VHOSTS ------------------------------------
+------------------------------------------------------------------------------------------------------------------
+ REMEMBER I FORGOT TO MENTION WHEN FUZZING WITH ASP.NET SPECIFIC MENTIONED BELOW REMEMBER IIS WORDLISTS ALSO 
+------------------------------------------------------------------------------------------------------------------
+
+
+- 40.79.81.134 runs on Azure and have ports 443: gives a 200_OK, 4433: gives 502 gateway problem, 4434: gives same response as 4433; and has one hostname: integrity-devsite.fnfis.com
+	---- TODO: [FUZZ it for paths] and vhosts
+
+- 156.55.68.20 runs on 80, 82, 10443 web service and expects xml
+	---- TODO: FUZZ it, i dont remember but its giving a rate limit error
+	
+	- found 156.55.68.14 simllar ports but runs also on 443, 4500 and has a urls in virustotal that are interesting
+	--- Located several paths like: XML/login.htm, /Xml/Login.xml, /xml/timeseries.xml, /xml/quote.asp, /xml/symbolguide.xml, and credentials located in in the files.
+
+	--- TODO: FUZZ it for more
+	--- TODO: bruteforce this domain, and check for waybackurls
+
+   - both are located in the infotecnet.com
+	
+
+- 63.141.160.21 found a web service on port 9443 and give text unauthorised
+	---- DONE: Fuzzing it
+	---- TODO: Bruteforce for headers
+
+- 156.55.173.241 runs on 443 and has a login panel i never see it:
+	- and has a multiple vhosts serving the same page
+	- found a couple of URLs of the IP in the virustotal
+	---- DONE [A LOT OF ERRORS CAUSE OF RATE LIMITING]: FUZZ it, for everything
+	---- TODO: check urls for the domains
+
+- 3.213.120.9 [DONE] running on 4443 not recognized service, and 443 gives 404 not found and has some vhosts
+
+- 54.159.131.16 [DONE NOTHING], 18.205.8.202, 50.17.191.30, 44.194.22.96, 52.70.189.215, 35.174.144.216, 52.7.15.179, 52.1.151.99,   52.6.225.47, 52.70.189.215 (Maybe all the same content) running on 4443, 443 which serves 404, while its domain gives access is denied.
+
+- 156.55.138.24 => has a lot of vhosts gives different responses on port 443 and some of them gives an interesting response headers like api-gw-prod2.fisglobal.com
+
+	- api-gw-prod2.fisglobal.com 
+	-- paths DONE:
+		/token 
+		/token/plaid
+		/userinfo
+		/token/oauth2
+		/token/icon 
+		/token/api 
+		/authorize
+		/services   [The SOAP endpoint]
+		/token/stats
+		/authorize/api/oauth2 [All needs POST Request, ALL THEY NEED is Authorization: Bearer <token>]
+
+	---- TODOS: Investigate more about this wos2 carbon server that runs on most of this ip instances
+
+	- api-admin-ui-prod2.fisglobal.com
+	-- the only valid path not 403, is /oauth2/token which is 405, [DONE]: CHECK IT
+
+	---- NOT_DONE: bruteforce headers and params and cookies
+
+- 147.249.130.109: tested But not that much explore it more found a this request that could changepassword but needs valid session:
+	- POST /EFTClient/Account/changepassword.cgi
+	  Host: 147.249.130.109
+	  Cookie: token=A9B36E11-81FC-11f0-81D1-005056AB5101; savedpath=/%3Fjosruys0%3D1,https;
+	  User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) 	  		Chrome/139.0.0.0 Safari/537.36
+	  Referer: https://147.249.130.109/EFTClient/Account/Login.htm
+	  X-CSRF-TOKEN: A9B36E11-81FC-11f0-81D1-005056AB5101
+	  Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+	  Connection: close
+...
+
+	  currentpassword=sOldpass&newpassword=sNewPass&newpassword_confirm=sRePass
+
+	- TODO: FUZZ it with different methods
+	- TODO: FUZZ js files
+	- TODO: Bruteforce for headers
+                
+
+
+- 156.55.138.16[DONE]: has 80 port that redirects, 443 gives 400 bad request but fisinsights.fnfis.com(200)(DONE Testing), planvfrpts.fnfis.com(401); and runs on 8443 which gives 404
+	
+    - fisinsights.fnfis.com:
+	- TODO: fuzz it on 80 port, 8443 port
+	- TODO: play with the params of 200 OK
+
+	- DONE[NOT COMPLETED BECAUSE OF ELECTRICITY]: Bruteforcing /content-exploration/search-microview/search-dist/compiled-locales/<JS_FILES>
+	- DONE: Bruteforce /services/<PATH> for everything because its like an api, [dirs DONE, DONE api, DONE JS FILES]
+
+	- Useful resource: https://viziblydiffrnt.github.io/blog/2017/01/26/documenting-tableau-vizportal-api for apis
+
+
+	- DONE: Fuzzing /javascripts/api/
+	--- DONE: viz_v1.js, tableau-2.min.js, tableau.embedding.3.latest.min.js(unminify it with .map file), tableau.embedding.3.1.0.min.js with different size, tableau.embedding.3.latest.js with different size, tableau-2.js, ... a lot of versions of tableau js file
+	
+	
+
+	- DONE: Also bruteforce /vizql/<path> for js files[DONE], apis[DONE], dirs[DONE]; i scraped from CSP header might be interesting.
+		--- found /trusted only
+
+	- NOTE: I found that is trying to sign me in it search for maybe note sure for Valid X-Xsrf-Token That used in the header
+
+	- NOTE: sign in endpoint of tableau service is at POST /api/3.19/auth/signin and params:
+		- {
+			"credentials": {
+			"name":"tableau",
+			"password":"tableau",
+			"site": {
+				"contentUrl":""
+				}
+			}
+		  }
+	---- Don't give responses after failed attempts it maybe blocked by ip
+
+	- NOTE: found /auth/add_generic_auth_credentials requires some params but gives 401:
+	---- {
+  		"data_class": "<string>",        // e.g. "oidc", "saml", "generic"
+  		"username": "<string>",          // user identifier
+  		"password": "<string>",          // password (if applicable)
+  		"username_alias": "<string>",    // optional, only if IdP uses alias
+  		"instance_url": "<string>",      // optional, only for some providers
+  		"role": "<string>"               // optional, sometimes IdP role/realm
+	      }
+
+	- NOTE: Param Miner identified x-forwarded-for but when tested nothing investigate more
+		- Found it may need an X-Tableau-Auth header for authentication
+	
+
+	- NOTE: I found an html file called /en/embeddedAuth.html and it has some js files with nothing on
+
+	- some interesting dirs like /content-exploration/omnibox-microview/ (has .txt file on it),  (has js files on it), /content-exploration/search-microview/ (has js files on it, 
+
+
+- 156.55.200.106[DONE]: this ip runs on 80(404 not found) and 443(200 OK, with `RP2 It works BDC2` content) and vhost some of them redirects to their domains and some of them server the same response of the ip
+
+	- TODO: Bruteforce dirs[DONE], apis[DONE], on both 80[DONE], 443 ports[DONE]
+
+
+- 156.55.202.200[DONE]: running on 443(200 OK with no content) and vhosts serve same response for two way of accessing them
+	- TODO: Fuzz for dirs[DONE], apis[DONE], .aspx file[TODO], ISS wordlist and js files[DONE], .aspx files under /content directory[DONE]
+	- TODO: check waymore for the vhosts might have links
+
+
+- 20.44.74.222[DONE]: running on both 80, 443(gives 404 not found) and same content as its only vhost
+	- TODO: Fuzz for dirs[DONE], apis[DONE], .aspx files[DONE], .aspx files under /public/<.aspx>, /secure/<.aspx> and js files
+
+
+
+- 40.143.6.90[CURRENTLY: has a VHOST www.scorecardrewards.com that are live and has functions
+	- TODO: Take a look at it
+	- CURRENTLY: Bruteforcing using generic wordlist the IP(DONE), then the VHOST[CURRENRLT]
+
+
+- 40.143.6.89: running on 443(400 bad request) but when changing vhost to www.scorecardcashbackrewards.com it works(200 OK)
+	- TODO: Take a look at it 
+
+
+- 40.143.6.87: running on 443(302) but when adding VHOST www.quickperksloyalty.com gives (200 OK)
+	- TODO: Take a look at it, bruteforce it for generic wordlists, and asp.net files
+
+
+- 74.206.110.41: running on 443(404 not found), 80(403) but not connecting
+	- TODO: Take a look, bruteforce for generic wordlists, and asp.net files on / and /TED2/<.aspx_files> and /TED1/<.ASPX_FILES>, /TED3/<.ASPX_FILES/
+
+
+- 156.55.137.15: running on 80(404), 443(400 bad req), and running on apache, and vhosts: 1 same response and 1 gives 403
+	- TODO: Bruteforce the port 80 using generic and apache wordlists.
+	- TODO: Bruteforce the vhost www.primeiq.com on port 443 with generic and apache wordlists.
+
+
+- 156.55.137.14: running on 80(gives 404 same for all vhosts), 443(bad request, except VHOST: www.primeassociates.com, 302 redirect not running on WAF) and this redirect response headers reveals info:
+	- INFOS:  Server: Microsoft-IIS/8.5, X-AspNetMvc-Version: 5.2, X-AspNet-Version: 4.0.30319, WWW-Authenticate: Bearer; which means the authentication is using the Bearer technique
+	
+	- TODO: Take a look and implement content discovery based on generic and specific testing
+	- TODO: Take a look at the waymore directory which has a urls of this domain primeassociates.com, which reveals some dirs and js dirs
+	- TODO: Take a look at js files and bruteforce headers and params
+
+
+- 147.249.146.24: running on 443(403 forbidden) and its VHOST same response and running ASP.net
+	- TODO: Bruteforce generic wordlists, and asp.net
+
+
+- 156.55.200.24: running on 80(404 not found), 443(400 bad request); serves same content on the same vhosts and they running on APACHE.
+	- TODO: Bruteforce using generic and apache specific.
+	- LATER: After sub Enum of the associated domain try vhost bruteforcing
+
+
+- 156.55.139.195: running on 80(301 redirect to https), 443(400 bad request); 
+	- TODO: After sub Enum try vhost bruteforcing
+
+
+- 156.55.139.82: running on 80,443(both 302 to www2.comsumercardaccess.com)
+	- TODO: After sub Enum try vhost bruteforcing
+
+
+- 216.189.244.151: running on 80(302 to https), 443(404 not found) running on APACHE.
+	- TODO: Bruteforce generic, apache specific
+	- TODO: vhost bruteforcing
+
+
+- 206.71.20.54: Same as 156.55.139.82 Except it redirects to www.nyceinfomanager.com
+
+
+- 147.249.130.33: running on 443(404 with ip host header) which is running on Microsoft-HTTPAPI/2.0, and its the origin IP of www.myplandocs.net
+
+	- TODO: Bruteforce the ip as host header the (404 not found i mean) for generic and asp.net specific
+	- TODO: Check the www.myplandocs.net with this origin ip and see waymore urls and play with it.
+
+
+- 89.30.114.138 running on 443(200 OK) serves a static page of www2.marketmapmuse.com(which is the origin ip behind the waf)
+	- TODO: Bruteforce generic, asp.net specific
+	- TODO: Take a look at old urls of them
+
+
+
+- 69.36.27.73: running on 443(403) which runs on Microsoft-IIS/10.0 and its the origin IP of (fsimfa.insidefsi.net run on akamai)
+	- TODO: Bruteforce generic, asp.net specific wordlists
+
+
+- 185.4.5.242: running on 443(200 OK) running on ASP.NET and Server: Microsoft-IIS/8.5
+	- TODO: Bruteforce generic, asp.net specific wordlists
+	- TODO: it has minified JS files in the main page try to review them
+	- NOTE: it has an interesting api endpoint guicy to discover like: /api/configuration/site-settings, /ssapi/sso
+
+
+- 185.4.6.54: 443(SSL Error: ALERT_HANDSHAKE_FAILURE)
+	- TODO: visit it again might be alive
+
+
+- 45.78.152.151: running on 403(200 OK which redirects to www.fislbxcentral.com) and has Asp.net on it and x-aspnetmvc-version: 5.2
+	- TODO: Bruteforce generic, asp.net specific wordlists
+	- TODO: See waymore urls
+	- NOTE: it has a login page try to play with it
+
+
+- 212.11.230.81: running on 80(200 OK), 443(404 not found), both running on apache server and its interesting
+	- TODO: Bruteforce generic, apache wordlists
+	- TODO: Check waymore, wayback urls, and source code of web app because it has interesting view
+	- NOTE: It has Typo3 CMS or something like this, search about it
+	- NOTE: it has the /fileadmin/ directory and inside it multiple dirs, explore them and fuzz them.
+
+
+- 156.55.137.185: running on 80(301 to https), 443(400 bad request), same response for all VHOSTS.
+	- TODO: After Sub Enum bruteforce it 
+
+
+- 156.55.137.65 running on 443(403), serves the same content as VHOSTs, and its running on ASP.NET
+	- TODO: Bruteforce generic and asp.net, IIS specific wordlists
+
+
+- 203.116.242.227: running on 443(403), serves the same content as VHOST, but Iam not sure about the ownership of FIS on this, verify it
+	- TODO: VERIFY Ownership
+	- NOTE: It has a lot of CVES
+	- TODO: FUZZ it for generic, apache, apache redhat specific wordlist cause they running on it
+	- NOTE: They leaks the versions Apache httpd2.4.37, 
+
+
+- 206.71.16.204: running on 80,443(302 both redirecting to same page)
+	- TODO: Iam suspicious about it, FUZZ it for generic wordlists
+
+
+- 156.55.200.28: running on 80(404), 443(400), serves the same content of its VHOST
+	- TODO: After sub Enum of cscu.net bruteforce it using them
+	- TODO: Bruteforce for generic, apache wordlists on port 80
+	- OPTIONAL: If u have time give 443 a try with above wordlists
+
+
+- 20.94.82.94: running on 443(404 not found), and when accessing VHOST gives (401 WWW-Authenticate: Basic realm) both running on ASP.NET Microsoft HTTPAPI IIS
+	- TODO: Bruteforce on port ip 404 not found then for vhost using generic, asp.net, IIS wordlists
+	- TODO: check waymore urls of the vhost and virustotal for the ip
+
+
+- 64.106.214.44: running on 443(200 OK but redirect instantly to personalcard.net) and running on ASP.NET
+	- TODO: FUZZ it for generic wordlists, ASP.NET, IIS wordlists
+	- TODO: check waymore, virustotal urls.
+
+
+- 216.34.182.215: running on 443(200 OK) IIS 10.0
+	- TODO: FUZZ it for generic wordlists, ASP.NET, IIS wordlists.
+
+
+- 156.55.137.40: running on 80(404 not found), 443(400 bad request) running on apache
+	- TODO: FUZZ 80 on generic, apache specific wordlists
+	- OPTIONAL: If u have time fuzz it 443 cause it maybe a waste of time
+
+
+- 156.55.205.36: running on 443(404), running on apache, serves the same content as its VHOSTS.
+	- TODO: FUZZ it with generic, apache specific wordlists.
+
+
+
+- 156.55.138.231: running on 443(400 bad request) but when accessing using the right vhosts of the subdomain vtmerchantportal.com like www.vtmerchantportal.com, ... and running on IIS, ASP.NET
+	- TODO: FUZZ it for generic, IIS, asp.net specific wordlists
+	- TODO: There is a js files read it
+	- TODO: Play with it.
+
+
+- 156.55.139.74: Same as 156.55.138.231
+
+
+- 128.251.251.184: running on 80,443(403), same content on VHOSTS
+	- OPTIONAL: if u wanna give it try of FUZZING generic, Microsoft azure, IIS, ASP.NET wordlists
+
+
+
+- 20.238.60.64: running on 443,9443(403), same content on VHOSTS, BUT 9443 has a different content length
+	- TODO: FUZZ generic, Microsoft azure, IIS, ASP.NET wordlists on 9443
+	- OPTIONAL: if u wanna give 443 a try of FUZZING generic, Microsoft azure, IIS, ASP.NET wordlists
+
+
+
+- 40.143.6.91: running on 443(200 OK: request rejected), it gives a strange behavior because accessing it with VHOSTS Gives 400 bad request, first one with no response body and second one with Invalid hostname response body
+	- TODO: FUZZ it with generic wordlists
+	- TODO: check waymore urls on the provided vhosts
+
+
+- 156.55.203.235: running on 80(302 to p443), 443(200 OK) different content on different VHOSTS except `rdc.chatsupport.help` its out of scope i think
+	- TODO: FUZZ it with generic wordlists, bruteforce recursively in different categories located in the HTML source code
+	- TODO: Take a look at the js files, at /api/<JS_FILES>
+	- TODO: check waymore, virustotal for urls of ip, and vhosts
+	- NOTE: its small website won't take much time, might test blind XSS
+
+
+- 147.249.12.150: running 443(200 OK), serving different content same like 156.55.203.235 but not the same in the same time :)
+	- TODO: FUZZ it with generic wordlists, bruteforce recursively in different categories located in the HTML source code
+	- TODO: Take a look at the js files, at /api/<JS_FILES>
+	- TODO: check waymore, virustotal for urls of ip, and vhosts
+	- NOTE: its small website won't take much time, might test blind XSS
+
+
+- 185.41.234.78: running on 80(302 to p443), 443(403), both redirecting /footprints to give diff status code
+	- TODO: FUZZ it on both ports for generic and apache wordlists
+
+
+- 156.55.202.180: running on 443(200 OK), its the Origin IP of qaprod.olb-ebanking.com(behind akamai)
+	- TODO: FUZZ it using generic, asp.net, apache wordlists.
+
+
+- 156.55.202.177: SAME CONTENT AS 156.55.202.180, BUT VHOSTS NAMES DIFF
+
+
+- 156.55.137.78, 156.55.139.233: running on 80, 443, and .jsp, can't be accessed cause of akamai only when accessing them in the browser
+	- TODO: check waymore urls again
+	- TODO: check virustotal again
+	- TODO: read js file
+	- TODO: Try to access them again might origin IP works 
+	- TODO: try to test the waymore urls and test them passively
+	- cibng.ntrsclp-online-535.com:
+		- JS Files located at /cib/scripts/, /cib/scripts/feature/selfenroll/, /cib/javascript/, /cib/scripts/views/enroll/enhanced/
+
+
+- 189.125.90.37: running on (443 Ok, Apache), serving same content as its vhosts
+	- NOTE: I Saw Sunguard(Out of scope) copyright from 2008-2012, investigate that
+	- TODO: FUZZ it for generic, apache wordlists
+	- TODO: Check the sourcecode and waymore urls.
+	- TODO: Check virustotal for the ip
+
+
+- 20.47.78.64, 52.177.247.221: running on 80,443(404, Microsoft-Azure-Application-Gateway/v2), serving same content as its VHOSTS.
+	- TODO: FUZZ it for generic, iis-,asp.net wordlists.
+	- TODO: Check virustotal for the ip, and waymore for the VHOSTS.
+
+
+- 156.55.202.205, 156.55.202.200: running on 443(200 OK, IIS,ASP.NET), serving same content as its VHOSTS
+	- TODO: FUZZ it for generic, IIS-,asp.net wordlists
+	- TODO: Check waymore, virustotal urls
+	- TODO: FUZZ it on /content/ directory
+
+- 13.89.190.121: running on 80,443(500 server error), running on IIS, serving same content as it VHOSTS
+	- TODO: FUZZ it for generic, IIS-,asp.net wordlists
+	- TODO: Check waymore, virustotal urls
+
+
+- 20.190.248.185: running om 443(503: no service to procedd your requests) but it has interesting vhosts
+
+
+- 216.34.182.205: running on 403(200 OK: FogBugz product)
+	- TODO: FUZZ with generic wordlists
+	- TODO: check virustotal for ip and waymore for domain
+	- TODO: Investigate more about FogBugz
+
+
+
+- 216.34.182.210: running on 443(200 OK), serving same content as its VHOSTs and has title `RTPB`
+	- TODO: FUZZ with generic wordlists
+	- TODO: check virustotal for ip and waymore for domain
+
+
+- 20.42.150.184: running on 443,80(404), serving same content as its VHOSTs, running on Microsoft-gateway
+	- TODO: FUZZ it for generic, IIS-,asp.net wordlists
+	- TODO: check waymore, virustotal urls
+	- TODO: check the source code
+
+ 
+- 147.249.130.28: running on 80(443 forbidden), 443(404 not found), serving same content as its VHOSTS
+	- TODO: FUZZ it for generic, IIS-,asp.net wordlists
+	- TODO: check waymore, virustotal urls
+
+
+- 147.249.130.27: running on 443(404 not found), giving same response except for www.relius.net which seems to be its Origin IP(Because domain is behind akamai)
+	- TODO: FUZZ the normal IP for generic, IIS-,asp.net wordlists
+	- TODO: FUZZ with VHOST: www.relius.net
+	- TODO: check, waymore, virustotal for urls
+	- TODO: Check www.relius.net in the browser and see and play with one in the origin IP
+
+
+- 147.249.131.85: running on 443(200 OK, sometime then redirect to login.fisglobal.com, review it without redirecting), their VHOSTS gives 302 to the value of the host header
+	- TODO: FUZZ it with generic, IIS-,asp.net wordlists.
+	- TODO: Check waymore, virustotal urls.
+	- TODO: Check js files
+
+
+
+- 199.200.27.81, 199.200.27.84(diff app), 199.200.27.85(199.200.27.85): running on 80(redirect to 443), 443 running on apache but its not responding
+	- TODO: visit it again might be alive now
+	- TODO: Try visit it using VPN, and bruteforce some headers might be blocking external access or region access.
+
+
+
+- 156.55.139.196, 156.55.139.149: running on 80(redirect to 443), 443(400 bad request), has two VHOSTS different content from the IP but same content of each other, www.efdelivery.net, mobius.efdelivery.net(200 OK) running on apache
+	- TODO: FUZZ the VHOSTS using generic wordlists, apache specific
+	- TODO: Check waymore, virustotal for ip, domains
+	
+
+- 156.55.137.210: same as 156.55.139.196 but instead of 200 OK, getting 403 forbidden on both ports 80,443
+	- OPTIONAL: You can fuzzit with apache, generic wordlists
+
+
+
+- 156.55.137.218: running 80(redirect to 443), 443(400 bad request), has two VHOSTS different from IP serving different content: dnweb1.ebtedge.com(200 OK; without IP it has akamai), dwweb.ebtedge.com(404 not found; without IP it has akamai also)
+	- TODO: FUZZ this VHOSTS using generic, apache wordlists
+	- TODO: Check waymore, virustotal urls for IP, VHOSTS
+	- TODO: If u find something play with it
+
+
+- 156.55.203.40: running on 80(302 to https://moveitwv.fisglobal.com), 443(200 OK: ORIGIN IP OF moveitwv.fisglobal.com), serving the same content as its VHOSTS
+	- TODO: FUZZ it for generic, IIS-asp.net wordlists (IT has most of js files`not all` inside /js/dist/)
+	- TODO: Check waymore, virustotal for IP and domain
+	- TODO: Check source code and read js files
+	- TODO: PLAY With it a little bit.	
+
+
+- 195.110.227.131: running on 443(200 OK) and have a download valid Ems page and its the same as www.validems.net(NO WAF ON IT)
+	- TODO: FUZZ generic, apache wordlists
+	- TODO: check waymore urls, virustotal for the ip
+	- NOTE: www.validems.net: running on Apache Tomcat/9.0.104 
+
+
+- 195.110.230.23: running on 443(200 OK) seems the same as 195.110.227.131 but it has a different content length so it maybe different
+	- TODO: FUZZ generic, apache wordlists
+	- TODO: check waymore urls, virustotal for the ip
+
+
+- 156.55.200.27: running on 80(404), 443(400 bad request, same as its vhosts)
+	- TODO: FUZZ generic, apache wordlists
+	- TODO: check waymore urls, virustotal for the ip
+
+
+
+- 156.55.55.155: running on 443(200 OK: Cisco ASA SSL VPN), serving same content as its VHOSTs
+	- TODO: FUZZ it generic
+	- TODO: Investigate more about this `Cisco ASA SSL VPN`
+	- TODO: Check waymore, virustotal for ip
+
+
+- 74.206.110.45: running on 443(200 Request fulfilled, document follows: TITLE `Cisco Email and Web Manager M695`)
+	- TODO: FUZZ it generic
+	- TODO: Check waymore, virustotal for ip
+	- TODO: Investigate more about `Cisco Email and Web Manager M695`
+
+
+- 156.55.55.154: running on 443(404 not found)
+	- TODO: FUZZ it generic
+	- TODO: Check waymore, virustotal for ip
+
+
+- 156.55.137.17: running on 80(404 not found), 443(400 bad request)
+	- TODO: FUZZ it generic on port 80
+	- TODO: Check waymore, virustotal for ip
+
+
+- 189.45.208.21: running on 443(404 not found), on server: Check Point SVN foundation
+	- TODO: FUZZ it generic
+	- TODO: Check waymore, virustotal for ip
+	- TODO: Investigate more about this server Check Point SVN foundation
+
+
+- 189.45.210.56: running on 443(404 not found), on Microsoft HTTPAPI httpd2.0
+	- TODO: FUZZ it generic, IIS-asp.net wordlists
+	- TODO: Check waymore, virustotal for ip
+
+
+- 156.55.137.72: running on 443(404 not found), the VHOST `intranet.endpointexchange.com` gives 401 with headers: WWW-Authenticate: Negotiate, WWW-Authenticate: NTLM
+	- TODO: FUZZ it generic
+	- TODO: FUZZ the 401 VHOST generic
+	- TODO: Check waymore, virustotal for the ip
+	- TODO: Investigate more about the headers of 401: WWW-Authenticate: Negotiate, WWW-Authenticate: NTLM
+
+
+
+- 156.55.137.75: running on 443(404 not found) serving same content as its VHOST
+	- TODO: FUZZ it generic
+	- TODO: Check waymore, virustotal for the ip
+
+
+
+- 103.41.70.78: running on 443: gives 500 server error: ASP.NET web.config error
+	- TODO: Investigate more about the error
+	- TODO: Check waymore and virustotal for urls
+	- TODO: FUZZ it using generic, IIS-asp.net wordlists
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

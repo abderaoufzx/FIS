@@ -1,0 +1,36 @@
+{
+  "user_options": {
+    "ui": {
+      "tabs": {
+        "logger": false
+      }
+    }
+  },
+  "project_options": {
+    "proxy": {
+      "match_replace_rules": [
+        {
+          "enabled": true,
+          "comment": "Add Bugcrowd header",
+          "type": "request_header",
+          "match": "",
+          "replace": "X-Bug-Bounty: Bugcrowd-abderaoufzx"
+        },
+        {
+          "enabled": true,
+          "comment": "Remove If-None-Match header",
+          "type": "request_header",
+          "match": "^If-None-Match:.*",
+          "replace": ""
+        },
+        {
+          "enabled": true,
+          "comment": "Remove If-Modified-Since header",
+          "type": "request_header",
+          "match": "^If-Modified-Since:.*",
+          "replace": ""
+        }
+      ]
+    }
+  }
+}

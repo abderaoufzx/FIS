@@ -1,0 +1,62 @@
+
+
+PS C:\Users\Abderaouf\Downloads> ffuf -u https://api-admin-ui-prod2.fisglobal.comFUZZ -w .\wordlist.txt -mc all -fc 404
+
+        /'___\  /'___\           /'___\
+       /\ \__/ /\ \__/  __  __  /\ \__/
+       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\
+        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/
+         \ \_\   \ \_\  \ \____/  \ \_\
+          \/_/    \/_/   \/___/    \/_/
+
+       v2.1.0-dev
+________________________________________________
+
+ :: Method           : GET
+ :: URL              : https://api-admin-ui-prod2.fisglobal.comFUZZ
+ :: Wordlist         : FUZZ: C:\Users\Abderaouf\Downloads\wordlist.txt
+ :: Follow redirects : false
+ :: Calibration      : false
+ :: Timeout          : 10
+ :: Threads          : 40
+ :: Matcher          : Response status: all
+ :: Filter           : Response status: 404
+________________________________________________
+
+/                       [Status: 200, Size: 10701, Words: 3427, Lines: 369, Duration: 162ms]
+/carbon/admin/js        [Status: 403, Size: 126, Words: 9, Lines: 1, Duration: 160ms]ors: 0 ::
+/carbon/admin/images    [Status: 403, Size: 126, Words: 9, Lines: 1, Duration: 161ms]ors: 0 ::
+/carbon/styles/images   [Status: 403, Size: 126, Words: 9, Lines: 1, Duration: 162ms]ors: 0 ::
+/carbon/admin           [Status: 403, Size: 126, Words: 9, Lines: 1, Duration: 161ms]ors: 0 ::
+/carbon/admin/css       [Status: 403, Size: 126, Words: 9, Lines: 1, Duration: 163ms]ors: 0 ::
+/index.html             [Status: 200, Size: 10701, Words: 3427, Lines: 369, Duration: 165ms]::
+//                      [Status: 200, Size: 10701, Words: 3427, Lines: 369, Duration: 163ms]::
+/oidc/api               [Status: 302, Size: 0, Words: 1, Lines: 1, Duration: 166ms]Errors: 0 ::
+/carbon/yui/build/yahoo [Status: 403, Size: 126, Words: 9, Lines: 1, Duration: 161ms]rors: 0 ::
+/carbon/dialog/js/jqueryui [Status: 403, Size: 126, Words: 9, Lines: 1, Duration: 159ms]s: 0 ::
+/carbon/dialog/css      [Status: 403, Size: 126, Words: 9, Lines: 1, Duration: 163ms]rors: 0 ::
+/carbon/dialog/css/jqueryui [Status: 403, Size: 126, Words: 9, Lines: 1, Duration: 163ms]: 0 ::
+/carbon/yui/build/selector [Status: 403, Size: 126, Words: 9, Lines: 1, Duration: 163ms]s: 0 ::
+/carbon/yui/build/animation [Status: 403, Size: 126, Words: 9, Lines: 1, Duration: 162ms]: 0 ::
+/carbon/styles/css      [Status: 403, Size: 126, Words: 9, Lines: 1, Duration: 164ms]rors: 0 ::
+/carbon/dialog/js       [Status: 403, Size: 126, Words: 9, Lines: 1, Duration: 164ms]rors: 0 ::
+/carbon/yui/build/yahoo-dom-event [Status: 403, Size: 126, Words: 9, Lines: 1, Duration: 163ms]
+/oauth2/authorize       [Status: 302, Size: 0, Words: 1, Lines: 1, Duration: 173ms]Errors: 0 ::
+/oauth2/token           [Status: 405, Size: 0, Words: 1, Lines: 1, Duration: 174ms]Errors: 0 ::
+/carbon/wp-content/uploads [Status: 403, Size: 126, Words: 9, Lines: 1, Duration: 161ms]s: 0 ::
+/carbon/carbon-incorporate/js/jquery/ui [Status: 403, Size: 126, Words: 9, Lines: 1, Duration: 161ms]
+/carbon/wp-includes/js/jquery/ui [Status: 403, Size: 126, Words: 9, Lines: 1, Duration: 159ms]:
+/carbon                 [Status: 403, Size: 126, Words: 9, Lines: 1, Duration: 161ms]rors: 0 ::
+/authenticationendpoint/css [Status: 302, Size: 0, Words: 1, Lines: 1, Duration: 172ms]rs: 0 ::
+/icons/                 [Status: 403, Size: 126, Words: 9, Lines: 1, Duration: 162ms]rors: 0 ::
+///                     [Status: 200, Size: 10701, Words: 3427, Lines: 369, Duration: 161ms] ::
+/carbon/wp-includes/js/jquery [Status: 403, Size: 126, Words: 9, Lines: 1, Duration: 163ms]0 ::
+/carbon/wp-includes/js/dist [Status: 403, Size: 126, Words: 9, Lines: 1, Duration: 161ms]: 0 ::
+/carbon/carbon-incorporate/js/dist [Status: 403, Size: 126, Words: 9, Lines: 1, Duration: 159ms]
+/authenticationendpoint/images [Status: 302, Size: 0, Words: 1, Lines: 1, Duration: 171ms] 0 ::
+/phpmyadmin/js/dist     [Status: 400, Size: 226, Words: 20, Lines: 9, Duration: 162ms]ors: 0 ::
+/icons/small            [Status: 301, Size: 260, Words: 14, Lines: 8, Duration: 161ms]ors: 0 ::
+/authenticationendpoint/libs/themes/default [Status: 302, Size: 0, Words: 1, Lines: 1, Duration: 175ms]
+/oidc/.well-known       [Status: 302, Size: 0, Words: 1, Lines: 1, Duration: 173ms]Errors: 0 ::
+/oidc/o/authorize       [Status: 302, Size: 0, Words: 1, Lines: 1, Duration: 166ms]Errors: 0 ::
+:: Progress: [704075/704075] :: Job [1/1] :: 247 req/sec :: Duration: [0:47:44] :: Errors: 0 ::

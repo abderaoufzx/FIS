@@ -1,0 +1,136 @@
+- endpoints:
+    - GET /collections/items, GET /collections/collections => 401, and 500,403 for other methods
+    ---- POST /collections/collections with JSON params: name, desc; changed from 500 to 401 so it needs a header
+    ---- GET /collections/items also has some params need to be with it, such as search, sort, filter, visibility, start_index, max_items
+
+    - GET /collections/collections/<collectionLuid>/items/<filterField>/counts
+    - GET /collections/collections/<filterField>/counts
+
+    - AddToIdentityPoolOnSiteUserRequest.ts file
+        - POST /api/3.18/users/identityPool , requires:
+            user: {
+                name: siteUser.username,
+                id: siteUser.luid,
+                authSetting: siteUser.authSetting,
+                identityPoolUuid: poolId,
+                identityUuid: identityUuid
+            } 
+
+    - RemoveFromIdentityPoolOnSiteUsersRequest.ts:
+        - DELETE /api/3.18/users/${siteUserLuid}/identityPool/${poolId},
+
+    - POST /api/3.18/auth/signin, its the sigin endpoint and needs this body
+        - {
+	    "credentials": {
+		    "name":"guest",
+		    "password":"guest",
+		    "site": {
+			    "contentUrl":""
+		    }
+	    }
+    }
+
+
+    --- there is also endpoints founded using ffuf on the downloads folder
+
+    --- also has some endpoints that shows only on the target, or http history burp tab
+
+    --- and there is some endpoints that is giving Invalid CORS request response like GET /content-exploration/search-microview/version.txt?ts=mezsebqj
+
+    - there is also js file might be located in /javascript/, javascripts/, /javascripts/api/, /sidecar/, /localize/ and /vizportal/api/saml/ and /vizportal/api/web/ and /vizportal/api/web/v1/ folders 
+
+
+    - WebHTTPClient.ts: 
+        - found that there is two base api endpoints which is vizportal/api/web/v1/ (used for most Web Client API requests.), vizportal/api/rest/v1/ (used specifically for file uploads)
+
+    - ExternalAuthService.ts:
+        - SamlLoginUrl: vizportal/api/saml/login, OpenIdLoginUrl: vizportal/api/web/v1/auth/openId;
+
+    - IdentityPoolService.ts:
+        - LOGIN_PATH_PREFIX: /authn-service/authenticate/, 
+
+    - UnauthenticatedUserHandler.ts:
+        - /#/authenticate, /#/pkce/
+
+    - Broadcasts.ts:
+        - GET /broadcasts/views/${viewLuid}?pageNumber=<>&sort=<>&pageSize=<> or /api/3.19/broadcasts/views/${viewLuid}?pageNumber=<>&sort=<>&pageSize=<> or /vizportal/api/rest/3.19/broadcasts/views/${viewLuid}?pageNumber=<>&sort=<>&pageSize=<>
+        
+        - POST /broadcasts/views/ or /api/3.19/broadcasts/views/ or /vizportal/api/rest/3.19/broadcasts/views/ 
+        --- needs body of broadcastViewSend: { viewId: viewLuid, showTabs: showTabs, showWatermark: showWatermark}
+        --- and maybe query params: acceptTermsOfUse: acceptTermsOfUse, overwrite: overwrite, asJob: true
+
+        - DELETE broadcasts/views/${viewLuid} or /api/3.19/broadcasts/views/${viewLuid} or /vizportal/api/rest/3.19/broadcasts/views/${viewLuid}
+
+        - GET /jobs/{jobLuid} or /api/3.19/jobs/{jobLuid} or /vizportal/api/rest/3.19/jobs/{jobLuid}
+
+    - EditFieldDescription.ts:
+        - PATCH /datasourcemodel/datasources/${params.datasourceLuid}/field or /api/3.19/datasourcemodel/datasources/${params.datasourceLuid}/field or /vizportal/api/rest/3.19/datasourcemodel/datasources/${params.datasourceLuid}/field
+        - PATCH /datasourcemodel/datasources/${params.datasourceLuid}/drillpath or /api/3.19/datasourcemodel/datasources/${params.datasourceLuid}/drillpath or /vizportal/api/rest/3.19/datasourcemodel/datasources/${params.datasourceLuid}/drillpath
+
+    - CollectionItemsResourceQuery.tsx:
+        - GET collections/collections/{collectionLuid}/items?search={search}&filter={filter}&sort={sort}&start_index={start}&max_items={max_items} or /api/3.19/collections/collections/{collectionLuid}/items?search={search}&filter={filter}&sort={sort}&start_index={start}&max_items={max_items} or /vizportal/api/rest/3.19/collections/collections/{collectionLuid}/items?search={search}&filter={filter}&sort={sort}&start_index={start}&max_items={max_items}
+        ---- query params: search?, filter?, sort?, start_index?, max_items?
+
+        - POST collections/collections/{collectionLuid}/items/batchCreate or /api/3.19/collections/collections/{collectionLuid}/items/batchCreate or /vizportal/api/rest/3.19/collections/collections/{collectionLuid}/items/batchCreate
+        ---- body: {"items": [{"contentLuid": "<string>","contentType": "<string>","contentName": "<string>"}]}
+
+        - PATCH collections/collections/{collectionLuid}/orderItems or /api/3.19/collections/collections/{collectionLuid}/orderItems or /vizportal/api/rest/3.19/collections/collections/{collectionLuid}/orderItems
+        ---- body: {"itemOrderings": [{"itemId": "<string>","itemType": "<string>","itemIdToMoveAfter": "<string>","itemTypeToMoveAfter": "<string>"}]}
+
+        - POST collections/collections/{collectionLuid}/items/batchDelete or /api/3.19/collections/collections/{collectionLuid}/items/batchDelete or /vizportal/api/rest/3.19/collections/collections/{collectionLuid}/items/batchDelete
+        ---- body: {"items": [{"contentLuid": "<string>","contentType": "<string>","contentName": null}]}
+
+    
+    - ContentActions.ts:
+        --- Or maybe on the endpoints /api/3.19 or /vizportal/api/rest/3.19/ u never know.
+
+        - GET /vizql/showadminview/views/WhoHasSeen?views_id={viewId} => 302 redirect
+
+        - GET /published-connection-editor/?project={projectLuid} or /published-connection-editor/
+
+        - GET /published-connection-editor/?published-connection={publishedConnectionId}
+
+        - GET {siteUrl.flowEditorFlowPath}?datasource={datasourceUrlName}&projectId={projectId}
+
+        - GET {siteUrl.flowEditorFlowPath}/{flowLuid}
+
+        - GET /t/{siteName}/newWorkbook/p/{projectName}/{auxId} or /t/{siteName}/newWorkbook/{auxId} or /newWorkbook/{auxId}
+        ---- {auxId is generated with client timestamp + random suffix}
+
+        - GET /t/{siteName}/authoringNewWorkbook/{datasourceUrlName}
+
+        - GET /t/{siteName}/editDatasource/{datasourceUrlName}
+
+        - GET /t/{siteName}/createPublishedDatasource/{auxId}
+
+        - GET /t/{siteName}/metrics/new/{auxId}?:ds={datasourceUrlName}&:dsId={datasourceId}
+
+    - AddOAuthCredentialActions.ts:
+        - /auth/request_oauth?data_class=google&secure=true&server=myserver&role=admin => gives 404
+        - /auth/add_generic_auth_credentials with some params => gives 401
+
+    - RestApiService.ts:
+        - api/${config.restApiVersion}/${config.endpoint}, api/${config.restApiVersion}/sites/${siteLuid}/${config.endpoint}`;
+
+    - LensTAG.ts:
+        - PATCH monolith-lens/lenses/permissions?lensId=1 => gives 404, but /services/monolith-lens/lenses/permissions?lensId=1 gives 401
+        - PATCH /services/monolith-lens/lenses/${lensId}
+        - POST /services/internal-lens/lenses [Currently bruteforcing headers not completed]
+
+    - LensUsageAnalytics.tsx:
+        - /vizql/showadminview/lenses/AskDataUsageAnalytics?lens_id=${lensId}
+
+    - SearchService.ts:
+        - POST /content-exploration/personalization/refresh => 401
+        - GET /content-exploration/suggestions => 403
+
+    - PKCELogin.tsx:
+        - /vizportal/api/clientxml/auth/pkce
+
+    - PKCEUrls.ts:
+        - 
+
+
+- Hardcoded Values might be useful
+    - PermissionsMeger.tsx: username: _system
+    - PersonalSpace.ts: {restApiVersion: '3.13', httpMethod: 'GET', endpoint: 'personalSpace'}

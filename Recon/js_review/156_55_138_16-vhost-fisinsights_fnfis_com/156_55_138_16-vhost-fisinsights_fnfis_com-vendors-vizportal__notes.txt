@@ -1,0 +1,2 @@
+- found /api/exp/metadata/graphql, gives 401 on GET,POST, and 403 on others.
+- found the graphql schema in the part_2 js file 99% of it its schema
