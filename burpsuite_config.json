@@ -1,36 +1,62 @@
 {
-  "user_options": {
-    "ui": {
-      "tabs": {
-        "logger": false
+  "project_options": {
+    "misc": {
+      "logging": {
+        "requests": {
+          "all_tools": "",
+          "extender": "",
+          "intruder": "",
+          "proxy": "",
+          "repeater": "",
+          "scanner": "",
+          "sequencer": ""
+        },
+        "responses": {
+          "all_tools": "",
+          "extender": "",
+          "intruder": "",
+          "proxy": "",
+          "repeater": "",
+          "scanner": "",
+          "sequencer": ""
+        }
       }
     }
   },
-  "project_options": {
-    "proxy": {
-      "match_replace_rules": [
-        {
-          "enabled": true,
-          "comment": "Add Bugcrowd header",
-          "type": "request_header",
-          "match": "",
-          "replace": "X-Bug-Bounty: Bugcrowd-abderaoufzx"
-        },
-        {
-          "enabled": true,
-          "comment": "Remove If-None-Match header",
-          "type": "request_header",
-          "match": "^If-None-Match:.*",
-          "replace": ""
-        },
-        {
-          "enabled": true,
-          "comment": "Remove If-Modified-Since header",
-          "type": "request_header",
-          "match": "^If-Modified-Since:.*",
-          "replace": ""
-        }
-      ]
+  "proxy": {
+    "miscellaneous": {
+      "disable_logging_to_history_and_site_map": true,
+      "disable_out_of_scope_logging_to_history_and_site_map": true
+    },
+    "match_replace_rules": [
+      {
+        "comment": "Add Bug Bounty Header",
+        "enabled": true,
+        "is_simple_match": true,
+        "rule_type": "request_header",
+        "string_replace": "X-Bug-Bounty: Bugcrowd-abderaoufzx"
+      },
+      {
+        "comment": "Remove If-None-Match caching header",
+        "enabled": true,
+        "is_simple_match": false,
+        "rule_type": "request_header",
+        "string_match": "^If-None-Match.*$",
+        "string_replace": ""
+      },
+      {
+        "comment": "Remove If-Modified-Since caching header",
+        "enabled": true,
+        "is_simple_match": false,
+        "rule_type": "request_header",
+        "string_match": "^If-Modified-Since.*$",
+        "string_replace": ""
+      }
+    ]
+  },
+  "user_options": {
+    "misc": {
+      "out_of_scope_history_logging_action": "drop"
     }
   }
 }
